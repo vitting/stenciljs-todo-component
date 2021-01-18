@@ -10,6 +10,7 @@ import {
 } from "@stencil/core";
 import cuid from "cuid";
 import { TodoItem } from "../../interfaces/todo_item.interface";
+import todoStore from "../../stores/todo.store";
 
 @Component({
   tag: "ghost-todo-comp",
@@ -20,33 +21,12 @@ export class GhostTodoComp {
   @Prop() initTodos: string;
   @State() todoList: TodoItem[] = [];
 
-  @State() formControls = {
-    todo: null,
-  };
-
   @Event() todoChange: EventEmitter<TodoItem[]>;
 
-  handleSubmit(e: Event) {
-    e.preventDefault();
-    if (this.formControls.todo) {
-      const newTodoItem: TodoItem = {
-        id: cuid(),
-        title: this.formControls.todo,
-        completed: false,
-      };
-
-      this.todoList = [...this.todoList, newTodoItem];
-      this.formControls.todo = "";
-      this.formControls = { ...this.formControls };
-      this.todoChange.emit(this.todoList);
-    }
-  }
-
-  handleControlChange(controlName: string, value: string): void {
-    this.formControls = {
-      ...this.formControls,
-      [controlName]: value,
-    };
+  @Listen("submitTodo")
+  handleSubmit(event: CustomEvent<TodoItem>) {
+    this.todoList = [...this.todoList, event.detail];
+    this.todoChange.emit(this.todoList);
   }
 
   @Listen("changeTodoCompleted")
@@ -81,13 +61,19 @@ export class GhostTodoComp {
           completed: false,
         };
       });
+
+      // todoStore.set() = this.initTodos.split(",").map<TodoItem>((item) => {
+      //   return {
+      //     id: cuid(),
+      //     title: item.trim(),
+      //     completed: false,
+      //   };
+      // });
     }
   }
 
   render() {
-    const elemNoData = (
-      <p>Get started, write your first Todo item now...</p>
-    );
+    const elemNoData = <p>Get started, write your first Todo item now...</p>;
 
     const elemList = (
       <ul>
@@ -105,21 +91,7 @@ export class GhostTodoComp {
     return (
       <Host>
         <h2>StencilJS Web Component</h2>
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <div class="control">
-            <input
-              type="text"
-              value={this.formControls.todo}
-              onInput={(e) =>
-                this.handleControlChange(
-                  "todo",
-                  (e.target as HTMLInputElement).value
-                )
-              }
-            />
-            <button type="submit">Add</button>
-          </div>
-        </form>
+        <ghost-todo-form-comp></ghost-todo-form-comp>
         {this.todoList.length <= 0 ? elemNoData : elemList}
       </Host>
     );
