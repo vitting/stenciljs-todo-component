@@ -7,32 +7,26 @@ import { TodoItem } from "../../interfaces/todo_item.interface";
   shadow: true,
 })
 export class GhostTodoFormComp {
-  @State() formControls = {
-    todo: null,
-  };
+  @State() todoInput: string = null;
 
   @Event() submitTodo: EventEmitter<TodoItem>;
 
   handleSubmit(e: Event) {
     e.preventDefault();
-    if (this.formControls.todo) {
+    if (this.todoInput) {
       const newTodoItem: TodoItem = {
         id: cuid(),
-        title: this.formControls.todo,
+        title: this.todoInput,
         completed: false,
       };
 
       this.submitTodo.emit(newTodoItem);
-      this.formControls.todo = "";
-      this.formControls = { ...this.formControls };
+      this.todoInput = "";
     }
   }
 
-  handleControlChange(controlName: string, value: string): void {
-    this.formControls = {
-      ...this.formControls,
-      [controlName]: value,
-    };
+  handleControlChange(value: string): void {
+    this.todoInput = value;
   }
 
   render() {
@@ -41,12 +35,9 @@ export class GhostTodoFormComp {
         <div class="control">
           <input
             type="text"
-            value={this.formControls.todo}
+            value={this.todoInput}
             onInput={(e) =>
-              this.handleControlChange(
-                "todo",
-                (e.target as HTMLInputElement).value
-              )
+              this.handleControlChange((e.target as HTMLInputElement).value)
             }
           />
           <button type="submit">Add</button>

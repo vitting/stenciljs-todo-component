@@ -2,7 +2,6 @@ import {
   Component,
   Host,
   h,
-  State,
   Event,
   EventEmitter,
   Prop,
@@ -19,42 +18,43 @@ import todoStore from "../../stores/todo.store";
 })
 export class GhostTodoComp {
   @Prop() initTodos: string;
-  @State() todoList: TodoItem[] = [];
 
   @Event() todoChange: EventEmitter<TodoItem[]>;
 
   @Listen("submitTodo")
   handleSubmit(event: CustomEvent<TodoItem>) {
-    this.todoList = [...this.todoList, event.detail];
-    this.todoChange.emit(this.todoList);
+    todoStore.state.todos = [...todoStore.state.todos, event.detail];
   }
 
   @Listen("changeTodoCompleted")
   handleComplete(event: CustomEvent<TodoItem>) {
     const item = event.detail;
-    this.todoList = this.todoList.map((todo) => {
+    todoStore.state.todos = todoStore.state.todos.map((todo) => {
       if (todo.id === item.id) {
         todo.completed = item.completed;
       }
 
       return todo;
     });
-
-    this.todoChange.emit(this.todoList);
   }
 
   @Listen("clickTodoRemove")
   handleRemoveItem(event: CustomEvent<TodoItem>) {
     const item = event.detail;
 
-    this.todoList = this.todoList.filter((todo) => todo.id !== item.id);
-    this.todoChange.emit(this.todoList);
+    todoStore.state.todos = todoStore.state.todos.filter(
+      (todo: TodoItem) => todo.id !== item.id
+    );
   }
 
   // Lifecycle method
   componentWillLoad() {
+    todoStore.onChange("todos", (todos) => {
+      this.todoChange.emit(todos);
+    });
+
     if (this.initTodos) {
-      this.todoList = this.initTodos.split(",").map<TodoItem>((item) => {
+      const todos = this.initTodos.split(",").map<TodoItem>((item) => {
         return {
           id: cuid(),
           title: item.trim(),
@@ -62,13 +62,7 @@ export class GhostTodoComp {
         };
       });
 
-      // todoStore.set() = this.initTodos.split(",").map<TodoItem>((item) => {
-      //   return {
-      //     id: cuid(),
-      //     title: item.trim(),
-      //     completed: false,
-      //   };
-      // });
+      todoStore.state.todos = todos;
     }
   }
 
@@ -77,7 +71,7 @@ export class GhostTodoComp {
 
     const elemList = (
       <ul>
-        {this.todoList.map((todo) => {
+        {todoStore.state.todos.map((todo: TodoItem) => {
           return (
             <ghost-todo-item-comp
               key={todo.id}
@@ -92,7 +86,7 @@ export class GhostTodoComp {
       <Host>
         <h2>StencilJS Web Component</h2>
         <ghost-todo-form-comp></ghost-todo-form-comp>
-        {this.todoList.length <= 0 ? elemNoData : elemList}
+        {todoStore.state.todos.length <= 0 ? elemNoData : elemList}
       </Host>
     );
   }

@@ -47,6 +47,7 @@ declare namespace LocalJSX {
         "onTodoChange"?: (event: CustomEvent<TodoItem[]>) => void;
     }
     interface GhostTodoFormComp {
+        "onSubmitTodo"?: (event: CustomEvent<TodoItem>) => void;
     }
     interface GhostTodoItemComp {
         "item"?: string;
