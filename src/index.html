@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="/build/ghost-todo.esm.js"></script>
+    <script nomodule src="/build/ghost-todo.js"></script>
+  </head>
+  <body>
+    <ghost-todo-comp init-todos="Todo item 1, Todo item 2"></ghost-todo-comp>
+
+    <script>
+      const elem = document.querySelector("ghost-todo-comp");
+      elem.addEventListener("todoChange", (e) => {
+        console.log("TODO CHANGED", e.detail);
+      });
+    </script>
+  </body>
+</html>
