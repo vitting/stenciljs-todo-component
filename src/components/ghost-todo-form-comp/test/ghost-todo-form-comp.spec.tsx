@@ -1,18 +1,18 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { GhostTodoComp } from '../ghost-todo-comp';
+import { GhostTodoFormComp } from '../ghost-todo-form-comp';
 
-describe('ghost-todo-comp', () => {
+describe('ghost-todo-form-comp', () => {
   it('renders', async () => {
     const page = await newSpecPage({
-      components: [GhostTodoComp],
-      html: `<ghost-todo-comp></ghost-todo-comp>`,
+      components: [GhostTodoFormComp],
+      html: `<ghost-todo-form-comp></ghost-todo-form-comp>`,
     });
     expect(page.root).toEqualHtml(`
-      <ghost-todo-comp>
+      <ghost-todo-form-comp>
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>
-      </ghost-todo-comp>
+      </ghost-todo-form-comp>
     `);
   });
 });

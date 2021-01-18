@@ -6,14 +6,10 @@ import {
   Event,
   EventEmitter,
   Prop,
+  Listen,
 } from "@stencil/core";
 import cuid from "cuid";
-
-export interface TodoItem {
-  id: string;
-  title: string;
-  completed: boolean;
-}
+import { TodoItem } from "../../interfaces/todo_item.interface";
 
 @Component({
   tag: "ghost-todo-comp",
@@ -53,10 +49,12 @@ export class GhostTodoComp {
     };
   }
 
-  handleComplete(item: TodoItem, checked: boolean): void {
+  @Listen("changeTodoCompleted")
+  handleComplete(event: CustomEvent<TodoItem>) {
+    const item = event.detail;
     this.todoList = this.todoList.map((todo) => {
       if (todo.id === item.id) {
-        todo.completed = checked;
+        todo.completed = item.completed;
       }
 
       return todo;
@@ -65,7 +63,10 @@ export class GhostTodoComp {
     this.todoChange.emit(this.todoList);
   }
 
-  handleRemoveItem(item: TodoItem) {
+  @Listen("clickTodoRemove")
+  handleRemoveItem(event: CustomEvent<TodoItem>) {
+    const item = event.detail;
+
     this.todoList = this.todoList.filter((todo) => todo.id !== item.id);
     this.todoChange.emit(this.todoList);
   }
@@ -84,9 +85,26 @@ export class GhostTodoComp {
   }
 
   render() {
+    const elemNoData = (
+      <p>Get started, write your first Todo item now...</p>
+    );
+
+    const elemList = (
+      <ul>
+        {this.todoList.map((todo) => {
+          return (
+            <ghost-todo-item-comp
+              key={todo.id}
+              item={JSON.stringify(todo)}
+            ></ghost-todo-item-comp>
+          );
+        })}
+      </ul>
+    );
+
     return (
       <Host>
-        <h2>Stencil JS Web Component</h2>
+        <h2>StencilJS Web Component</h2>
         <form onSubmit={(e) => this.handleSubmit(e)}>
           <div class="control">
             <input
@@ -102,34 +120,7 @@ export class GhostTodoComp {
             <button type="submit">Add</button>
           </div>
         </form>
-        <ul>
-          {this.todoList.map((todo) => {
-            return (
-              <li key={todo.id}>
-                <div class="remove">
-                  <button
-                    type="button"
-                    onClick={() => this.handleRemoveItem(todo)}
-                  >
-                    ❌
-                  </button>
-                  <div class={{ completed: todo.completed, item: true }}>
-                    <span>{todo.title}</span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) =>
-                        this.handleComplete(
-                          todo,
-                          (e.target as HTMLInputElement).checked
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        {this.todoList.length <= 0 ? elemNoData : elemList}
       </Host>
     );
   }

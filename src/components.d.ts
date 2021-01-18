@@ -5,10 +5,15 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { TodoItem } from "./components/ghost-todo-comp/ghost-todo-comp";
+import { TodoItem } from "./interfaces/todo_item.interface";
 export namespace Components {
     interface GhostTodoComp {
         "initTodos": string;
+    }
+    interface GhostTodoFormComp {
+    }
+    interface GhostTodoItemComp {
+        "item": string;
     }
 }
 declare global {
@@ -18,8 +23,22 @@ declare global {
         prototype: HTMLGhostTodoCompElement;
         new (): HTMLGhostTodoCompElement;
     };
+    interface HTMLGhostTodoFormCompElement extends Components.GhostTodoFormComp, HTMLStencilElement {
+    }
+    var HTMLGhostTodoFormCompElement: {
+        prototype: HTMLGhostTodoFormCompElement;
+        new (): HTMLGhostTodoFormCompElement;
+    };
+    interface HTMLGhostTodoItemCompElement extends Components.GhostTodoItemComp, HTMLStencilElement {
+    }
+    var HTMLGhostTodoItemCompElement: {
+        prototype: HTMLGhostTodoItemCompElement;
+        new (): HTMLGhostTodoItemCompElement;
+    };
     interface HTMLElementTagNameMap {
         "ghost-todo-comp": HTMLGhostTodoCompElement;
+        "ghost-todo-form-comp": HTMLGhostTodoFormCompElement;
+        "ghost-todo-item-comp": HTMLGhostTodoItemCompElement;
     }
 }
 declare namespace LocalJSX {
@@ -27,8 +46,17 @@ declare namespace LocalJSX {
         "initTodos"?: string;
         "onTodoChange"?: (event: CustomEvent<TodoItem[]>) => void;
     }
+    interface GhostTodoFormComp {
+    }
+    interface GhostTodoItemComp {
+        "item"?: string;
+        "onChangeTodoCompleted"?: (event: CustomEvent<TodoItem>) => void;
+        "onClickTodoRemove"?: (event: CustomEvent<TodoItem>) => void;
+    }
     interface IntrinsicElements {
         "ghost-todo-comp": GhostTodoComp;
+        "ghost-todo-form-comp": GhostTodoFormComp;
+        "ghost-todo-item-comp": GhostTodoItemComp;
     }
 }
 export { LocalJSX as JSX };
@@ -36,6 +64,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "ghost-todo-comp": LocalJSX.GhostTodoComp & JSXBase.HTMLAttributes<HTMLGhostTodoCompElement>;
+            "ghost-todo-form-comp": LocalJSX.GhostTodoFormComp & JSXBase.HTMLAttributes<HTMLGhostTodoFormCompElement>;
+            "ghost-todo-item-comp": LocalJSX.GhostTodoItemComp & JSXBase.HTMLAttributes<HTMLGhostTodoItemCompElement>;
         }
     }
 }

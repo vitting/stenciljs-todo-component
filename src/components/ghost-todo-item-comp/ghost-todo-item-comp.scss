@@ -1,0 +1,28 @@
+li {
+  padding: 5px;
+  background-color: rgb(144, 146, 27);
+  color: white;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  .remove {
+    display: flex;
+    button {
+      padding: 0;
+      margin-right: 5px;
+      border: none;
+      background-color: transparent;
+      display: inline-block;
+    }
+
+    .item {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.completed {
+        text-decoration: line-through #5454ce 2px;
+      }
+    }
+  }
+}
