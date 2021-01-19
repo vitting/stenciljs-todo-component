@@ -47,7 +47,8 @@ export class GhostTodoComp {
     );
   }
 
-  // Lifecycle method
+  // https://stenciljs.com/docs/component-lifecycle
+  // Lifecycle method - Called once just after the component is first connected to the DOM
   componentWillLoad() {
     todoStore.onChange("todos", (todos) => {
       this.todoChange.emit(todos);
@@ -67,8 +68,10 @@ export class GhostTodoComp {
   }
 
   render() {
+    // HTML fragment
     const elemNoData = <p>Get started, write your first Todo item now...</p>;
 
+    // HTML fragment
     const elemList = (
       <ul>
         {todoStore.state.todos.map((todo: TodoItem) => {
