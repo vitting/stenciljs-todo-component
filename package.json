@@ -1,7 +1,7 @@
 {
-  "name": "ghost-todo",
-  "version": "0.0.1",
-  "description": "Stencil Component Starter",
+  "name": "ghost-todo-stenciljs-webcomponent",
+  "version": "0.0.3",
+  "description": "Demo project - Simple Todo list made in StencilJS",
   "main": "dist/index.cjs.js",
   "module": "dist/custom-elements/index.js",
   "es2015": "dist/esm/index.mjs",
@@ -22,7 +22,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^2.0.1",
+    "@stencil/core": "^2.3.0",
     "cuid": "^2.1.8"
   },
   "license": "MIT",
